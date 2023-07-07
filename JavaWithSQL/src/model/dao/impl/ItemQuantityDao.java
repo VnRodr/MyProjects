@@ -45,7 +45,7 @@ public class ItemQuantityDao implements ItemQuantityModelDao
 				}
 				DataBaseConnection.closeResultSet(rs);
 			}
-			else throw new SQLException("Error! No line added.");		
+			else System.out.println("Error, something went wrong");		
 		}
 		catch (SQLException e)
 		{
@@ -114,7 +114,7 @@ public class ItemQuantityDao implements ItemQuantityModelDao
 				Item item = instantiateItem(rs);
 				return item;
 			}
-			else throw new ExceptionHandler("Kaboom");
+			else return null;
 		}
 		catch (SQLException e)
 		{
@@ -134,17 +134,19 @@ public class ItemQuantityDao implements ItemQuantityModelDao
 		
 		try 
 		{
-			st = conn.prepareStatement("SELECT To_buy.*"
-					+ " FROM To_buy WHERE To_buy.item = ?");
+			st = conn.prepareStatement("SELECT * FROM To_buy WHERE item LIKE ?");
 			
-			st.setString(1, name);
+			st.setString(1, "%" + name + "%");
 			rs = st.executeQuery();
 			if (rs.next())
 			{
 				Item item = instantiateItem(rs);
 				return item;
 			}
-			else throw new ExceptionHandler("Something is not right");
+			else 
+			{
+				return null;
+			}
 		}
 		catch (SQLException e)
 		{
